@@ -89,16 +89,6 @@ export function useSocket() {
     });
 
     socket.on('hop-rejected', ({ reason }) => {
-      // Rollback the last optimistic hop
-      const state = useGameStore.getState();
-      if (state.hops.length > 1) {
-        const previousHops = state.hops.slice(0, -1);
-        useGameStore.setState({
-          currentArticle: previousHops[previousHops.length - 1],
-          hops: previousHops,
-          hopCount: state.hopCount - 1,
-        });
-      }
       console.warn('Hop rejected:', reason);
     });
 
