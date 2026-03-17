@@ -1,0 +1,18 @@
+{
+  "name": "wikihop",
+  "private": true,
+  "packageManager": "npm@11.11.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "NODE_ENV=production node packages/server/dist/index.js",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0"
+  }
+}
