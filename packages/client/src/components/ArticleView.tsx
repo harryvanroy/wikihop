@@ -42,9 +42,13 @@ export default function ArticleView({ title, onHop }: ArticleViewProps) {
     const target = e.target as HTMLElement;
     const anchor = target.closest('a');
     if (!anchor) return;
-    e.preventDefault();
 
     const href = anchor.getAttribute('href') || '';
+
+    // Allow in-page anchor links to work normally
+    if (href.startsWith('#')) return;
+
+    e.preventDefault();
     const match = href.match(/^\/wiki\/([^#]+)/);
     if (!match) return;
 
@@ -52,6 +56,11 @@ export default function ArticleView({ title, onHop }: ArticleViewProps) {
 
     // Block special namespaces
     if (BLOCKED_NAMESPACES.some((ns) => articleTitle.startsWith(ns))) {
+      return;
+    }
+
+    // Skip self-links (same article, possibly different section)
+    if (articleTitle.toLowerCase() === title.toLowerCase()) {
       return;
     }
 
