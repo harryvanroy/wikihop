@@ -127,37 +127,6 @@ export async function fetchRandomArticles(count: number): Promise<Array<{ title:
   return data.query.random.slice(0, count).map((a) => ({ title: a.title, id: a.id }));
 }
 
-const PAGEVIEWS_API = 'https://wikimedia.org/api/rest_v1/metrics/pageviews';
-
-export async function fetchTopArticles(
-  year: number,
-  month: number,
-  day: number
-): Promise<Array<{ title: string; views: number }>> {
-  const mm = String(month).padStart(2, '0');
-  const dd = String(day).padStart(2, '0');
-  const url = `${PAGEVIEWS_API}/top/en.wikipedia/all-access/${year}/${mm}/${dd}`;
-
-  const res = await fetch(url, {
-    headers: { 'User-Agent': USER_AGENT },
-  });
-
-  if (!res.ok) {
-    throw new Error(`Pageviews API error: ${res.status} ${res.statusText}`);
-  }
-
-  const data = (await res.json()) as {
-    items: Array<{
-      articles: Array<{ article: string; views: number; rank: number }>;
-    }>;
-  };
-
-  return data.items[0].articles.map((a) => ({
-    title: a.article.replace(/_/g, ' '),
-    views: a.views,
-  }));
-}
-
 /** Clear all caches. Used for testing. */
 export function clearCache() {
   articleCache.clear();

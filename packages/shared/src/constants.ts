@@ -1,8 +1,13 @@
 export const ROOM_CODE_LENGTH = 4;
-export const MIN_ARTICLE_LINKS = 10;
+export const MIN_ARTICLE_LINKS = 20;
 export const MAX_HOPS_PER_SECOND = 2;
 export const COUNTDOWN_SECONDS = 3;
 export const ROOM_EXPIRE_FINISHED_MS = 5 * 60 * 1000;
+
+// BFS article selection settings
+export const TARGET_DEPTH = 4; // how many hops away the target should be from start
+export const RANDOM_ARTICLE_BATCH_SIZE = 10; // how many random articles to fetch per attempt
+export const MAX_PAIR_RETRIES = 5; // max attempts to find a valid pair
 
 export const BLOCKED_NAMESPACES = [
   'File:',
@@ -19,12 +24,7 @@ export const BLOCKED_NAMESPACES = [
   'Draft:',
 ];
 
-// Popular article pool settings
-export const POPULAR_ARTICLES_REFRESH_MS = 24 * 60 * 60 * 1000; // 24 hours
-export const POPULAR_ARTICLES_MIN_POOL_SIZE = 50;
-export const POPULAR_ARTICLES_FETCH_DAYS = 3;
-
-// Title patterns to exclude from the popular articles pool
+// Title patterns to exclude from article selection
 export const EXCLUDED_TITLE_PREFIXES = [
   'List of ',
   'Lists of ',

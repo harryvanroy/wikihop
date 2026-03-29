@@ -7,7 +7,6 @@ import type { ClientToServerEvents, ServerToClientEvents } from '@wikihop/shared
 import { wikipediaRouter } from './routes/wikipedia';
 import { registerLobbyHandlers } from './socket/handlers/lobby';
 import { registerGameHandlers } from './socket/handlers/game';
-import { ensurePool } from './services/popularArticles';
 
 export function createApp(clientUrl?: string) {
   const app = express();
@@ -52,9 +51,5 @@ if (process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3001;
   httpServer.listen(PORT, () => {
     console.log(`WikiHop server running on port ${PORT}`);
-    // Pre-warm the popular articles pool in the background
-    ensurePool().catch((err) =>
-      console.error('Failed to pre-warm popular articles pool:', err)
-    );
   });
 }

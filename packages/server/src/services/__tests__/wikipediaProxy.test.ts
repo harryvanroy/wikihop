@@ -4,7 +4,6 @@ import {
   fetchArticleHtml,
   fetchArticle,
   fetchRandomArticles,
-  fetchTopArticles,
   clearCache,
 } from '../wikipediaProxy';
 
@@ -366,75 +365,3 @@ describe('clearCache', () => {
   });
 });
 
-describe('fetchTopArticles', () => {
-  it('returns parsed articles with titles and view counts', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          items: [
-            {
-              articles: [
-                { article: 'Albert_Einstein', views: 50000, rank: 1 },
-                { article: 'United_States', views: 40000, rank: 2 },
-              ],
-            },
-          ],
-        }),
-    });
-
-    const result = await fetchTopArticles(2026, 3, 15);
-
-    expect(result).toEqual([
-      { title: 'Albert Einstein', views: 50000 },
-      { title: 'United States', views: 40000 },
-    ]);
-  });
-
-  it('converts underscored titles to spaces', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          items: [
-            {
-              articles: [
-                { article: 'New_York_City', views: 30000, rank: 1 },
-              ],
-            },
-          ],
-        }),
-    });
-
-    const result = await fetchTopArticles(2026, 1, 1);
-
-    expect(result[0].title).toBe('New York City');
-  });
-
-  it('constructs the correct URL with zero-padded month and day', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          items: [{ articles: [] }],
-        }),
-    });
-
-    await fetchTopArticles(2026, 3, 5);
-
-    const calledUrl = mockFetch.mock.calls[0][0];
-    expect(calledUrl).toContain('/2026/03/05');
-  });
-
-  it('throws on non-ok response', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404,
-      statusText: 'Not Found',
-    });
-
-    await expect(fetchTopArticles(2026, 1, 1)).rejects.toThrow(
-      'Pageviews API error: 404 Not Found'
-    );
-  });
-});
